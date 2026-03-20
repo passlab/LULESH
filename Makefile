@@ -8,9 +8,9 @@ LULESH_EXEC = lulesh2.0
 #MPI_INC = /opt/local/include/openmpi
 #MPI_LIB = /opt/local/lib
 
-SERCXX = g++ -DUSE_MPI=0
+SERCXX = clang++-21 --gcc-install-dir=/usr/lib/gcc/x86_64-linux-gnu/11 -DUSE_MPI=0
 MPICXX = OMPI_CC=clang-21 OMPI_CXX=clang++-21 mpicxx -DUSE_MPI=1
-CXX = $(MPICXX)
+CXX = $(SERCXX)
 
 SOURCES2.0 = \
 	lulesh.cc \
@@ -23,7 +23,7 @@ OBJECTS2.0 = $(SOURCES2.0:.cc=.o)
 #Default build suggestions with OpenMP for g++
 PINSIGHT_DIR = $(realpath ../../)
 CXXFLAGS = -g -O3 -fopenmp -I. -I$(PINSIGHT_DIR)/src -Wall
-LDFLAGS = -g -O3 -fopenmp -L/usr/lib/llvm-21/lib -lomp
+LDFLAGS = -g -O3 -fopenmp --gcc-install-dir=/usr/lib/gcc/x86_64-linux-gnu/11
 
 #Below are reasonable default flags for a serial build
 #CXXFLAGS = -g -O3 -I. -Wall
