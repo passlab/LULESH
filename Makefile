@@ -21,7 +21,8 @@ SOURCES2.0 = \
 OBJECTS2.0 = $(SOURCES2.0:.cc=.o)
 
 #Default build suggestions with OpenMP for g++
-CXXFLAGS = -g -O3 -fopenmp -I. -Wall
+PINSIGHT_DIR = $(realpath ../../)
+CXXFLAGS = -g -O3 -fopenmp -I. -I$(PINSIGHT_DIR)/src -Wall
 LDFLAGS = -g -O3 -fopenmp -L/usr/lib/llvm-21/lib -lomp
 
 #Below are reasonable default flags for a serial build
@@ -48,9 +49,12 @@ LDFLAGS = -g -O3 -fopenmp -L/usr/lib/llvm-21/lib -lomp
 
 all: $(LULESH_EXEC)
 
-$(LULESH_EXEC): $(OBJECTS2.0)
+$(PINSIGHT_DIR)/src/app_knob.o: $(PINSIGHT_DIR)/src/app_knob.c $(PINSIGHT_DIR)/src/app_knob.h
+	cc -c -g -O3 -I$(PINSIGHT_DIR)/src -o $@ $<
+
+$(LULESH_EXEC): $(OBJECTS2.0) $(PINSIGHT_DIR)/src/app_knob.o
 	@echo "Linking"
-	$(CXX) $(OBJECTS2.0) $(LDFLAGS) -lm -o $@
+	$(CXX) $(OBJECTS2.0) $(PINSIGHT_DIR)/src/app_knob.o $(LDFLAGS) -lm -o $@
 
 clean:
 	/bin/rm -f *.o *~ $(OBJECTS) $(LULESH_EXEC)
